@@ -1,33 +1,36 @@
-import { searchGoogleImage as Engine } from "./scraper.engine.js";
-import { saveImageLocally as ImgFile } from "./local.save.js";
+/**
+ * Main functionality for image search and download operations
+ * 
+ * This module contains the primary interfaces and functions for searching
+ * and downloading images from Google Images.
+ * 
+ * @module tools
+ */
 
-export interface EngineConfig {
-  delay?: number;
-  timeout?: number;
-  debug_mode?: boolean;
-  limit?: number;
-}
-export interface ImageConfig {
-  format?: string;
-  quality?: number;
-  save_path?: string;
-}
-export interface ISGConfig {
-  query: string;
-  engine?: EngineConfig;
-  image?: ImageConfig;
+// Import the functions but don't re-export them yet
+import { searchGoogleImage } from "./scraper.engine.js";
+import { saveImageLocally } from "./local.save.js";
 
-}
+// Import types from main index - we'll create a direct reference without circular imports
+import type { EngineConfig, ImageConfig, Options } from "../index.js";
 
-export interface Options{
-  engineConfig?: EngineConfig;
-  imageConfig?: ImageConfig;
-} 
-
-export default async function ISG(query: string, options?: Options ): Promise<string[]> {
-  const results = await Engine(query, options!.engineConfig);
-  if(options!.imageConfig){
-    results.forEach(async (imageUrl) => await ImgFile(imageUrl, query, options!.imageConfig));
-  };
+/**
+ * Main function to search for images and optionally save them locally
+ * 
+ * @async
+ * @param {string} query - The search query string for finding images
+ * @param {Options} [options] - Optional configuration for search engine and image processing
+ * @returns {Promise<string[]>} Promise resolving to an array of image URLs found
+ */
+async function ISG(query: string, options?: Options): Promise<string[]> {
+  const results = await searchGoogleImage(query, options?.engineConfig);
+  if(options?.imageConfig){
+    for (const imageUrl of results) {
+      await saveImageLocally(imageUrl, query, options.imageConfig);
+    }
+  }
   return results;
 }
+
+// Export the main function as default
+export default ISG;

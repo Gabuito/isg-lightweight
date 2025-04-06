@@ -1,144 +1,322 @@
-# images-scraper
-
-Simple NPM package to scrape Google images using Puppeteer. The headless browser will behave as a 'normal' user and scrolls to the bottom of the page until there are enough results.
-
-**Please note that this is not an ideal approach to scrape images. It is only a demonstration to scrape images from Google.
-If you don't care about the source, it is probably better to use a different search engine with an API, such as Bing.**
-
 <p align="center">
-    <img src="https://media.giphy.com/media/WSqsRhuPWPTrYtXAiN/giphy.gif">
+  <img src="https://i.postimg.cc/Vv8ttvC2/Sem-T-tulo-1.png" alt="ISG-Lightweight Logo" width="500"
+ margin-bottom="-100px" />
+<h1 align="center">
+  ISG-Lightweight
+</h1>
 </p>
 
-# Installation
+A lightweight, easy-to-use package for searching Google Images and optionally downloading them locally. Built with Puppeteer for reliable web scraping and Sharp for high-quality image processing.
 
-`npm install images-scraper`
+> **Note**: ISG-Lightweight is fully asynchronous. All functions return Promises and should be used with async/await or Promise chains.
 
-# Example
+## Project Origin
 
-Give me the first 200 images of Banana's from Google (using headless browser)
+ISG-Lightweight was created out of the need for an easy-to-use tool to quickly capture placeholder images during learning and development processes. While developing applications and websites, having quick access to relevant images for testing layouts, components, and user interfaces is invaluable. This library aims to simplify that process, providing a straightforward way to obtain test images without interrupting your workflow. We hope this tool can help others who need similar functionality during their own learning journey and development projects.
 
-```js
-var Scraper = require('images-scraper');
+## Installation
 
-const google = new Scraper({
-  puppeteer: {
-    headless: true,
-  },
+```bash
+npm install isg-lightweight
+```
+
+## Local Development
+
+To use ISG-Lightweight locally during development:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/gabuioli/ISG-Lightweight.git
+cd ISG-Lightweight
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Build the project:
+```bash
+npm run build
+```
+
+4. Create a global symlink:
+```bash
+npm link
+```
+
+5. In your project, link to the local version:
+```bash
+cd /path/to/your/project
+npm link isg-lightweight
+```
+
+This creates a symbolic link from your global node_modules to your local development version, allowing you to test changes immediately.
+
+## Basic Usage
+
+### ES Modules (ESM)
+
+```javascript
+import ISG from 'isg-lightweight';
+
+// Get image URLs only
+const imageUrls = await ISG('cute cats');
+console.log(imageUrls);
+// Output: ['https://example.com/cat1.jpg', 'https://example.com/cat2.jpg']
+```
+
+### CommonJS
+
+```javascript
+const { default: ISG } = require('isg-lightweight');
+
+// Get image URLs only
+(async () => {
+  const imageUrls = await ISG('cute cats');
+  console.log(imageUrls);
+  // Output: ['https://example.com/cat1.jpg', 'https://example.com/cat2.jpg']
+})();
+```
+
+### Search and Save Images Locally
+
+#### ESM
+```javascript
+import ISG from 'isg-lightweight';
+
+// Search for images and save them locally
+const imageUrls = await ISG('cute cats', {
+  imageConfig: {
+    format: 'webp',
+    quality: 85
+  }
 });
+
+// Images will be saved to ./downloads/cute cats/
+```
+
+#### CommonJS
+```javascript
+const { default: ISG } = require('isg-lightweight');
 
 (async () => {
-  const results = await google.scrape('banana', 200);
-  console.log('results', results);
+  // Search for images and save them locally
+  const imageUrls = await ISG('cute cats', {
+    imageConfig: {
+      format: 'webp',
+      quality: 85
+    }
+  });
+  
+  // Images will be saved to ./downloads/cute cats/
 })();
 ```
 
-## Results
+### Using Individual Functions
 
-`node src/example.js`
+#### ESM
+```javascript
+import { GetURL, SaveFrom } from 'isg-lightweight';
 
-```js
-results [
-  {
-    url: 'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?quality=85&crop=0px%2C74px%2C1024px%2C536px&resize=1200%2C628&strip',
-    source: 'https://time.com/5730790/banana-panama-disease/',
-    title: 'What We Can Learn From the Near-Extinction of Bananas | Time'
-  },
-  ...
-]
-```
-
-# Example 2 Using an array in a single browser instance (save resources)
-
-Give me the first 200 images of the following array of strings from Google (using headless browser)
-
-```js
-var Scraper = require('images-scraper');
-
-const google = new Scraper({
-  puppeteer: {
-    headless: false,
-  },
+// Only search for images
+const imageUrls = await GetURL('mountain landscapes', { 
+  limit: 5,
+  timeout: 3000 
 });
 
-var fruits = ['banana', 'tomato', 'melon', 'strawberry'](async () => {
-  const results = await google.scrape(fruits, 200);
-  console.log('results', results);
+// Manually save an image
+await SaveFrom('https://example.com/landscape.jpg', 'landscapes', { 
+  format: 'png',
+  quality: 90 
+});
+```
+
+#### CommonJS
+```javascript
+const { GetURL, SaveFrom } = require('isg-lightweight');
+
+(async () => {
+  // Only search for images
+  const imageUrls = await GetURL('mountain landscapes', { 
+    limit: 5,
+    timeout: 3000 
+  });
+
+  // Manually save an image
+  await SaveFrom('https://example.com/landscape.jpg', 'landscapes', { 
+    format: 'png',
+    quality: 90 
+  });
 })();
 ```
 
-## Results when using an array
+## API Reference
 
-`node src/example.js`
+### Main Function
 
-```js
-results[
-  {
-    query: '<Your query string>',
-    images: [
-      {
-        url: 'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?quality=85&crop=0px%2C74px%2C1024px%2C536px&resize=1200%2C628&strip',
-        source: 'https://time.com/5730790/banana-panama-disease/',
-        title: 'What We Can Learn From the Near-Extinction of Bananas | Time',
-      },
-    ],
+#### `ISG(query, options?)`
+
+The main function that searches for images and optionally saves them locally.
+
+- **query**: `string` - The search query
+- **options**: `Options` (optional) - Configuration options
+- **returns**: `Promise<string[]>` - Array of image URLs
+
+### Configuration Interfaces
+
+#### `EngineConfig`
+
+Configuration for the search engine behavior.
+
+| Property   | Type    | Default | Description                                  |
+| ---------- | ------- | ------- | -------------------------------------------- |
+| delay      | number  | 500     | Delay between operations in milliseconds     |
+| timeout    | number  | 2000    | Timeout for operations in milliseconds       |
+| debug_mode | boolean | false   | Whether to run in debug mode (shows browser) |
+| limit      | number  | 1       | Maximum number of images to retrieve         |
+
+#### `ImageConfig`
+
+Configuration for image processing and saving.
+
+| Property  | Type   | Default       | Description                                          |
+| --------- | ------ | ------------- | ---------------------------------------------------- |
+| format    | string | 'webp'        | Image format to save as (e.g., "webp", "jpg", "png") |
+| quality   | number | 80            | Quality of the saved image (0-100)                   |
+| save_path | string | './downloads' | Directory path to save images                        |
+
+#### `Options`
+
+Combined options for the ISG function.
+
+| Property     | Type         | Description                         |
+| ------------ | ------------ | ----------------------------------- |
+| engineConfig | EngineConfig | Configuration for the search engine |
+| imageConfig  | ImageConfig  | Configuration for image processing  |
+
+### Individual Functions
+
+#### `GetURL(query, config?)`
+
+Searches Google Images for the given query and extracts image URLs.
+
+- **query**: `string` - The search query
+- **config**: `EngineConfig` (optional) - Engine configuration
+- **returns**: `Promise<string[]>` - Array of image URLs
+
+#### `SaveFrom(imageUrl, query, options?)`
+
+Downloads an image from a URL and saves it to the local filesystem.
+
+- **imageUrl**: `string` - The URL of the image to download
+- **query**: `string` - The search query (for folder naming)
+- **options**: `ImageConfig` (optional) - Image configuration
+- **returns**: `Promise<void>`
+
+## Advanced Examples
+
+### Maximum Customization
+
+#### ESM
+```javascript
+import ISG from 'isg-lightweight';
+
+const imageUrls = await ISG('vintage cars', {
+  engineConfig: {
+    limit: 20,       // Get 20 images
+    timeout: 5000,    // 5 second timeout
+    delay: 1000,      // 1 second delay
+    debug_mode: true  // Show browser window for debugging
+  },
+  imageConfig: {
+    format: 'jpg',    // Save as JPG
+    quality: 95,      // High quality
+    save_path: './my-car-images'  // Custom save location
   }
-];
-```
-
-# Options
-
-There are multiple options that can be passed to the constructor.
-
-```js
-var options = {
-  userAgent: 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0', // the user agent
-  puppeteer: {}, // puppeteer options, for example, { headless: false }
-  tbs: {  // every possible tbs search option, some examples and more info: http://jwebnet.net/advancedgooglesearch.html
-    isz:  // options: l(arge), m(edium), i(cons), etc.
-    itp:  // options: clipart, face, lineart, news, photo
-    ic:   // options: color, gray, trans
-    sur:  // options: fmc (commercial reuse with modification), fc (commercial reuse), fm (noncommercial reuse with modification), f (noncommercial reuse)
-  },
-  safe: false   // enable/disable safe search
-};
-```
-
-# Repl.it
-
-Example to fork: https://repl.it/join/hylyxvxc-peterevers
-
-Running this on Repl.it requires you to create a Bash repl instead of a NodeJS repl. Creating a Bash repl will provide you the Chromium dependency.
-
-# Heroku
-
-To use this packages on Heroku, install https://elements.heroku.com/buildpacks/jontewks/puppeteer-heroku-buildpack .
-Then run.
-
-```
-npm config set puppeteer_download_host=https://npm.taobao.org/mirrors
-```
-
-And reinstall Puppeteer.
-
-# Debugging
-
-Debugging can be done by disabling the headless browser and visually inspect the actions taken.
-
-```js
-const google = new Scraper({
-  puppeteer: {
-    headless: false,
-  },
 });
 ```
 
-Or by settings the environment variable `LOG_LEVEL`.
+#### CommonJS
+```javascript
+const { default: ISG } = require('isg-lightweight');
 
-`LOG_LEVEL=debug node src/example.js`.
+(async () => {
+  const imageUrls = await ISG('vintage cars', {
+    engineConfig: {
+      limit: 20,       // Get 20 images
+      timeout: 5000,    // 5 second timeout
+      delay: 1000,      // 1 second delay
+      debug_mode: true  // Show browser window for debugging
+    },
+    imageConfig: {
+      format: 'jpg',    // Save as JPG
+      quality: 95,      // High quality
+      save_path: './my-car-images'  // Custom save location
+    }
+  });
+})();
+```
 
-# License
+### Error Handling
 
-Copyright (c) 2021, Peter Evers <pevers90@gmail.com>
+#### ESM
+```javascript
+import ISG from 'isg-lightweight';
 
-Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+try {
+  const imageUrls = await ISG('rare butterflies', {
+    engineConfig: { limit: 10 }
+  });
+  console.log(`Found ${imageUrls.length} images`);
+} catch (error) {
+  console.error('Error searching images:', error.message);
+}
+```
+
+#### CommonJS
+```javascript
+const { default: ISG } = require('isg-lightweight');
+
+(async () => {
+  try {
+    const imageUrls = await ISG('rare butterflies', {
+      engineConfig: { limit: 10 }
+    });
+    console.log(`Found ${imageUrls.length} images`);
+  } catch (error) {
+    console.error('Error searching images:', error.message);
+  }
+})();
+```
+
+## Important Disclaimer
+
+**Legal Notice**: ISG-Lightweight is a tool for searching and downloading images from Google Images. The use of any images obtained through this tool is solely the responsibility of the end user.
+
+Please be aware that:
+- Many images found on Google are protected by copyright
+- Using images without proper permission may violate copyright laws
+- This tool does not filter results based on usage rights or licenses
+- The developers of ISG-Lightweight assume no liability for the misuse of images obtained through this tool
+
+We strongly recommend that you:
+- Only use images you have the right to use
+- Check image licensing before using in any project
+- Consider using images with permissive licenses (e.g., Creative Commons)
+- Respect the rights of content creators and copyright holders
+- Limit usage primarily to educational, learning, and personal purposes
+- For commercial projects, ensure you have proper licensing for all images
+
+This tool is recommended primarily for educational purposes, learning environments, and personal use where placeholder or sample images are needed temporarily. For production or commercial applications, always ensure you have the appropriate rights to use any images.
+
+By using this tool, you acknowledge that you are responsible for complying with all applicable laws regarding the usage of the images you download.
+
+## License
+
+MIT License
+
+Copyright (c) 2023 Gabuito
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files.
