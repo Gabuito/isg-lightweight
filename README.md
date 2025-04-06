@@ -8,6 +8,10 @@
 
 A lightweight, easy-to-use package for searching Google Images and optionally downloading them locally. Built with Puppeteer for reliable web scraping and Sharp for high-quality image processing.
 
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-Compatible-blue?logo=typescript" alt="TypeScript Compatible"/>
+</p>
+
 > **Note**: ISG-Lightweight is fully asynchronous. All functions return Promises and should be used with async/await or Promise chains.
 
 ## Project Origin
@@ -25,27 +29,32 @@ npm install isg-lightweight
 To use ISG-Lightweight locally during development:
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/gabuioli/ISG-Lightweight.git
 cd ISG-Lightweight
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Build the project:
+
 ```bash
 npm run build
 ```
 
 4. Create a global symlink:
+
 ```bash
 npm link
 ```
 
 5. In your project, link to the local version:
+
 ```bash
 cd /path/to/your/project
 npm link isg-lightweight
@@ -82,6 +91,7 @@ const { default: ISG } = require('isg-lightweight');
 ### Search and Save Images Locally
 
 #### ESM
+
 ```javascript
 import ISG from 'isg-lightweight';
 
@@ -97,6 +107,7 @@ const imageUrls = await ISG('cute cats', {
 ```
 
 #### CommonJS
+
 ```javascript
 const { default: ISG } = require('isg-lightweight');
 
@@ -116,6 +127,7 @@ const { default: ISG } = require('isg-lightweight');
 ### Using Individual Functions
 
 #### ESM
+
 ```javascript
 import { GetURL, SaveFrom } from 'isg-lightweight';
 
@@ -133,6 +145,7 @@ await SaveFrom('https://example.com/landscape.jpg', 'landscapes', {
 ```
 
 #### CommonJS
+
 ```javascript
 const { GetURL, SaveFrom } = require('isg-lightweight');
 
@@ -219,6 +232,7 @@ Downloads an image from a URL and saves it to the local filesystem.
 ### Maximum Customization
 
 #### ESM
+
 ```javascript
 import ISG from 'isg-lightweight';
 
@@ -238,6 +252,7 @@ const imageUrls = await ISG('vintage cars', {
 ```
 
 #### CommonJS
+
 ```javascript
 const { default: ISG } = require('isg-lightweight');
 
@@ -261,6 +276,7 @@ const { default: ISG } = require('isg-lightweight');
 ### Error Handling
 
 #### ESM
+
 ```javascript
 import ISG from 'isg-lightweight';
 
@@ -275,6 +291,7 @@ try {
 ```
 
 #### CommonJS
+
 ```javascript
 const { default: ISG } = require('isg-lightweight');
 
@@ -290,17 +307,32 @@ const { default: ISG } = require('isg-lightweight');
 })();
 ```
 
+## Known Issues
+
+- Highly dependent on stable internet connection
+- Current performance is O(n²) (work in progress to reduce to O(n))
+- Instability when using tunneling and VPNs
+- Occasional Google CAPTCHA challenges
+- Heavy dependency on Google's frontend structure
+
+## Core Dependencies
+
+- Node.js (v16+)
+- Puppeteer
+
 ## Important Disclaimer
 
 **Legal Notice**: ISG-Lightweight is a tool for searching and downloading images from Google Images. The use of any images obtained through this tool is solely the responsibility of the end user.
 
 Please be aware that:
+
 - Many images found on Google are protected by copyright
 - Using images without proper permission may violate copyright laws
 - This tool does not filter results based on usage rights or licenses
 - The developers of ISG-Lightweight assume no liability for the misuse of images obtained through this tool
 
 We strongly recommend that you:
+
 - Only use images you have the right to use
 - Check image licensing before using in any project
 - Consider using images with permissive licenses (e.g., Creative Commons)
@@ -316,7 +348,7 @@ By using this tool, you acknowledge that you are responsible for complying with 
 
 MIT License
 
-Copyright (c) 2023 Gabuito
+Copyright (c) 2025 Gabuito
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files.
