@@ -19,7 +19,7 @@ A lightweight, easy-to-use package for searching Google Images and optionally do
 ISG-Lightweight was created out of the need for an easy-to-use tool to quickly capture placeholder images during learning and development processes. While developing applications and websites, having quick access to relevant images for testing layouts, components, and user interfaces is invaluable. This library aims to simplify that process, providing a straightforward way to obtain test images without interrupting your workflow. We hope this tool can help others who need similar functionality during their own learning journey and development projects.
 
 
-Based on em [pevers/images-scraper]((https://github.com/pevers/images-scraper))
+Based on [pevers/images-scraper](https://github.com/pevers/images-scraper)
 
 
 ## Installation
